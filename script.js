@@ -49,27 +49,48 @@ const data = {
 const $display = document.getElementById('library')
 const $newBtn = document.getElementById('add-post')
 const $newPost = document.getElementById('new-post')
+const $editPost = document.getElementById('edit-post')
 
 function listIdeas () {
 
     const library = []
 
     for (let i = 0; i < data.ideas.length; i++) {
-    library.push(
-        `<div class="card m-3">
-            <div class="card-header">
-            ${data.ideas[i].username}
-            </div>
-            <div class="card-body">
-            <p class="card-text">${data.ideas[i].content}</p>
-            </div>
-            <div class="card-footer">
-            <a class="btn btn-secondary upvote" data-index="${i}">+</a>
-            <small>${data.ideas[i].score}</small>
-            <a class="btn btn-secondary downvote" data-index="${i}">-</a>
-            </div>
-        </div>`
-    )
+        if (data.ideas[i].username == 'currentUser') {
+            library.push(
+                `<div class="card mb-3">
+                    <div class="card-header">
+                    ${data.ideas[i].username}
+                    <a class="btn btn-secondary edit" data-index="${i}">Edit</a>
+                    <a class="btn btn-secondary delete" data-index="${i}">Delete</a>
+                    </div>
+                    <div class="card-body new-edit">
+                    <p class="card-text">${data.ideas[i].content}</p>
+                    </div>
+                    <div class="card-footer grid">
+                        <a class="btn btn-secondary upvote" data-index="${i}">+</a>
+                        <small>${data.ideas[i].score}</small>
+                        <a class="btn btn-secondary downvote" data-index="${i}">-</a>
+                    </div>
+                </div>`
+            )
+        } else {
+            library.push(
+                `<div class="card mb-3">
+                    <div class="card-header">
+                    ${data.ideas[i].username}
+                    </div>
+                    <div class="card-body">
+                    <p class="card-text">${data.ideas[i].content}</p>
+                    </div>
+                    <div class="card-footer grid">
+                        <a class="btn btn-secondary upvote" data-index="${i}">+</a>
+                        <small>${data.ideas[i].score}</small>
+                        <a class="btn btn-secondary downvote" data-index="${i}">-</a>
+                    </div>
+                </div>`
+            )
+        }
   }
 
   $display.innerHTML = library.join('')
@@ -87,6 +108,12 @@ $display.addEventListener('click', function (e) {
         const index = e.target.dataset.index
         const idea = data.ideas[index]
         idea.score--
+    } else if (e.target.classList.contains('edit')) {
+        const index = e.target.dataset.index
+        editPost(index)
+    } else if (e.target.classList.contains('delete')) {
+        const index = e.target.dataset.index
+        deletePost(index)
     }
 
     listIdeas()
@@ -97,7 +124,7 @@ $newBtn.addEventListener('click', function (e) {
     const addNew = []
 
     addNew.push(
-        `<div class="card m-3 newPost">
+        `<div class="card mb-3 newPost">
             <div class="card-header">
                 ${data.currentUser}
             </div>
@@ -155,3 +182,46 @@ function newPost () {
     })
 }
 
+function editPost (value) {
+
+    // const newEdit = []
+
+    // const content = data.ideas[value].content
+
+    // newEdit.push(
+    //     `<div class="card mb-3 newEdit">
+    //     <div class="card-header">
+    //         ${data.currentUser}
+    //     </div>
+    //     <div class="card-body newAlert">
+    //         <label for="editContent" class="form-label">Edit Post</label>
+    //         <textarea class="form-control mb-3" id="editContent">${content}</textarea>
+    //     </div>
+    //     <div class="card-footer">
+    //         <a class="btn btn-primary make-edit">Make Changes</a>
+    //         <a class="btn btn-secondary cancel-edit">Cancel</a>
+    //     </div>
+    //     </div>`
+    // )
+
+    // $newPost.innerHTML = newEdit.join('')
+    
+    // const $makeEdit = document.querySelector('make-edit')
+    // const $cancelEdit = document.querySelector('cancel-edit')
+
+    // $cancelEdit.addEventListener('click', function(e){
+    //     console.log('gamer')
+    //     const element = document.querySelector(".newEdit")
+    //     element.parentElement.removeChild(element)
+    // })
+
+    // $makeEdit.addEventListener('click', function(e){
+
+    // })
+}
+
+function deletePost(value) {
+    console.log('ghamerdjasdkf')
+    data.ideas.splice(value, 1)
+    listIdeas()
+}
