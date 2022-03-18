@@ -60,9 +60,12 @@ function listIdeas () {
             library.push(
                 `<div class="card mb-3">
                     <div class="card-header">
-                    ${data.ideas[i].username}
-                    <a class="btn btn-secondary edit" data-index="${i}">Edit</a>
-                    <a class="btn btn-secondary delete" data-index="${i}">Delete</a>
+                    ${data.ideas[i].username}:
+                    <div class="row">
+                        You
+                        <a class="btn btn-secondary edit" data-index="${i}">Edit</a>
+                        <a class="btn btn-secondary delete" data-index="${i}">Delete</a>
+                    </div>
                     </div>
                     <div class="card-body new-edit">
                     <p class="card-text">${data.ideas[i].content}</p>
@@ -184,44 +187,68 @@ function newPost () {
 
 function editPost (value) {
 
-    // const newEdit = []
-
-    // const content = data.ideas[value].content
-
-    // newEdit.push(
-    //     `<div class="card mb-3 newEdit">
-    //     <div class="card-header">
-    //         ${data.currentUser}
-    //     </div>
-    //     <div class="card-body newAlert">
-    //         <label for="editContent" class="form-label">Edit Post</label>
-    //         <textarea class="form-control mb-3" id="editContent">${content}</textarea>
-    //     </div>
-    //     <div class="card-footer">
-    //         <a class="btn btn-primary make-edit">Make Changes</a>
-    //         <a class="btn btn-secondary cancel-edit">Cancel</a>
-    //     </div>
-    //     </div>`
-    // )
-
-    // $newPost.innerHTML = newEdit.join('')
+    const newEdit = []
     
-    // const $makeEdit = document.querySelector('make-edit')
-    // const $cancelEdit = document.querySelector('cancel-edit')
+    const user = data.currentUser
+    const content = data.ideas[value].content
+    const score = data.ideas[value].score
 
-    // $cancelEdit.addEventListener('click', function(e){
-    //     console.log('gamer')
-    //     const element = document.querySelector(".newEdit")
-    //     element.parentElement.removeChild(element)
-    // })
+    newEdit.push(
+        `<div class="card mb-3 newEdit">
+        <div class="card-header">
+            ${data.currentUser}
+        </div>
+        <div class="card-body newAlert">
+            <label for="editContent" class="form-label">Edit Post</label>
+            <textarea class="form-control mb-3" id="editContent">${content}</textarea>
+        </div>
+        <div class="card-footer">
+            <a href='#' class="btn btn-primary make-edit">Make Changes</a>
+            <a class="btn btn-secondary cancel-edit">Cancel</a>
+        </div>
+        </div>`
+    )
 
-    // $makeEdit.addEventListener('click', function(e){
+    $newPost.innerHTML = newEdit.join('')
+    
+    deletePost(value)
 
-    // })
+    const $makeEdit = document.querySelector('.make-edit')
+    const $cancelEdit = document.querySelector('.cancel-edit')
+
+    $cancelEdit.addEventListener('click', function(e){
+        const element = document.querySelector(".newEdit")
+        element.parentElement.removeChild(element)
+
+        const current = {
+            username: user
+            ,content: content
+            ,score: score
+        }
+
+        data.ideas.splice(value, 0, current)
+
+        listIdeas()
+    })
+
+    $makeEdit.addEventListener('click', function(e){
+        const textBox = document.getElementById('editContent').value
+        const element = document.querySelector(".newEdit")
+        element.parentElement.removeChild(element)
+
+        const current = {
+            username: user
+            ,content: textBox
+            ,score: score
+        }
+
+        data.ideas.splice(value, 0, current)
+
+        listIdeas()
+    })
 }
 
 function deletePost(value) {
-    console.log('ghamerdjasdkf')
     data.ideas.splice(value, 1)
     listIdeas()
 }
